@@ -121,7 +121,7 @@ public extension UIView {
         
         ToastManager.shared.setUpBackground(interaction: interaction!)
         
-        if interaction == false{
+        if interaction == false{ 
             DispatchQueue.main.asyncAfter(deadline: .now()+1){
                 ToastManager.shared.setUpBackground(interaction: true)
             }
