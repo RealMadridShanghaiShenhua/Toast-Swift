@@ -127,6 +127,10 @@ public extension UIView {
             }
         }
         
+        func setBackground(interaction : Bool){
+            ToastManager.shared.setUpBackground(interaction: interaction)
+        }
+        
     }
     
 
