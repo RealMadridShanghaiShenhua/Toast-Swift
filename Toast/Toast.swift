@@ -38,6 +38,8 @@ import ObjectiveC
  */
 public extension UIView {
     
+    
+    
     /**
      Keys used for associated objects.
      */
@@ -57,6 +59,9 @@ public extension UIView {
      class that can be used with associated objects.
      */
     private class ToastCompletionWrapper {
+        
+        
+        
         let completion: ((Bool) -> Void)?
         
         init(_ completion: ((Bool) -> Void)?) {
@@ -106,15 +111,25 @@ public extension UIView {
      @param completion The completion closure, executed after the toast view disappears.
             didTap will be `true` if the toast view was dismissed from a tap.
      */
-    func makeToast(_ message: String?, duration: TimeInterval = ToastManager.shared.duration, position: ToastPosition = ToastManager.shared.position, title: String? = nil, image: UIImage? = nil, style: ToastStyle = ToastManager.shared.style, completion: ((_ didTap: Bool) -> Void)? = nil) {
+    func makeToast(_ message: String?, duration: TimeInterval = ToastManager.shared.duration, position: ToastPosition = ToastManager.shared.position, title: String? = nil, image: UIImage? = nil, style: ToastStyle = ToastManager.shared.style, completion: ((_ didTap: Bool) -> Void)? = nil, interaction : Bool? = true) {
         do {
             let toast = try toastViewForMessage(message, title: title, image: image, style: style)
             showToast(toast, duration: duration, position: position, completion: completion)
         } catch ToastError.missingParameters {
             print("Error: message, title, and image are all nil")
         } catch {}
+        
+        ToastManager.shared.setUpBackground(interaction: interaction!)
+        
+        if interaction == false{
+            DispatchQueue.main.asyncAfter(deadline: .now()+1){
+                ToastManager.shared.setUpBackground(interaction: true)
+            }
+        }
+        
     }
     
+
     /**
      Creates a new toast view and presents it at a given center point.
      
@@ -698,6 +713,7 @@ public struct ToastStyle {
 */
 public class ToastManager {
     
+    private var viewBackground : UIView?
     /**
      The `ToastManager` singleton instance.
      
@@ -743,6 +759,19 @@ public class ToastManager {
      */
     public var position: ToastPosition = .bottom
     
+    
+    func setUpBackground(interaction : Bool){
+        
+        if (viewBackground == nil) {
+            let mainWindow = UIApplication.shared.windows.first ?? UIWindow()
+            viewBackground = UIView(frame: mainWindow.bounds)
+            mainWindow.addSubview(viewBackground!)
+        }
+        
+        viewBackground?.backgroundColor = interaction ? .clear : UIColor(red: 0, green: 0, blue: 0, alpha: 0.2)
+        viewBackground?.isUserInteractionEnabled = (interaction == false)
+        
+    }
 }
 
 // MARK: - ToastPosition
