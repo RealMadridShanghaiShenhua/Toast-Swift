@@ -111,6 +111,11 @@ public extension UIView {
      @param completion The completion closure, executed after the toast view disappears.
             didTap will be `true` if the toast view was dismissed from a tap.
      */
+    
+    func setBackground(interaction : Bool){
+        ToastManager.shared.setUpBackground(interaction: interaction)
+    }
+    
     func makeToast(_ message: String?, duration: TimeInterval = ToastManager.shared.duration, position: ToastPosition = ToastManager.shared.position, title: String? = nil, image: UIImage? = nil, style: ToastStyle = ToastManager.shared.style, completion: ((_ didTap: Bool) -> Void)? = nil, interaction : Bool? = true) {
         do {
             let toast = try toastViewForMessage(message, title: title, image: image, style: style)
@@ -128,9 +133,7 @@ public extension UIView {
         }
     }
     
-    func setBackground(interaction : Bool){
-        ToastManager.shared.setUpBackground(interaction: interaction)
-    }
+
     
 
     /**
