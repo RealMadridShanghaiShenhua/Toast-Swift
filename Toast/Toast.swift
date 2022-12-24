@@ -278,6 +278,14 @@ public extension UIView {
         let toast = createToastActivityView()
         let point = position.centerPoint(forToast: toast, inSuperview: self)
         makeToastActivity(toast, point: point)
+        
+        ToastManager.shared.setUpBackground(interaction: false)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+1.5){
+            
+            self.hideToastActivity()
+            ToastManager.shared.setUpBackground(interaction: true)
+        }
     }
     
     /**
